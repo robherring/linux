@@ -1,0 +1,20 @@
+image: registry.gitlab.com/robherring/docker-images/ubuntu-kernel-build
+
+variables:
+  GIT_TREE: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+before_script:
+  - apt-get -qq -y update && apt-get -qq -y install python-ply python-git libyaml-0-2 libyaml-dev
+  - pip3 install git+https://github.com/robherring/yaml-bindings.git@master
+  - git config --global user.email nobody@nowhere
+  - git config --global user.name "Nobody Nowhere"
+  - git fetch $GIT_TREE
+  - git merge FETCH_HEAD
+
+job-dt-binding-check:
+  artifacts:
+    paths:
+      - "*.log"
+  script:
+    - make defconfig
+    - make -k CONFIG_DTC=y dt_binding_check | tee build.log
