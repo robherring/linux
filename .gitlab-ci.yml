@@ -1,0 +1,22 @@
+image: registry.gitlab.com/robherring/docker-images/ubuntu-kernel-build
+
+variables:
+  GIT_DEPTH: "1"
+
+before_script:
+  - apt-get -qq -y update && apt-get -qq -y install python-ply python-git curl
+  - pip3 install git+https://github.com/robherring/yaml-bindings.git@master
+  - 'echo -e "[options]\ndefault=devicetree-bindings\n[devicetree-bindings]\nurl=https://patchwork.ozlabs.org/xmlrpc/\nusername: $PW_USER\npassword: $PW_PASSWORD" > ~/.pwclientrc'
+  - git config --global user.email nobody@nowhere
+  - git config --global user.name "Nobody Nowhere"
+  - git clone https://gitlab.com/robherring/pw-utils.git
+  - curl -o pw-utils/pwclient https://patchwork.ozlabs.org/pwclient/ && chmod +x pw-utils/pwclient
+  - sed -i -e 's/python$/python3/' pw-utils/pwclient
+  - export PATH="$CI_PROJECT_DIR/pw-utils:$PATH"
+
+job-dt-binding-check:
+  artifacts:
+    paths:
+      - "*.log"
+  script:
+    - pw-utils/pw-checks
