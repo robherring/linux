@@ -198,7 +198,6 @@ struct ftrace_likely_data {
  */
 #define __pure			__attribute__((pure))
 #define __aligned(x)		__attribute__((aligned(x)))
-#define __aligned_largest	__attribute__((aligned))
 #define __printf(a, b)		__attribute__((format(printf, a, b)))
 #define __scanf(a, b)		__attribute__((format(scanf, a, b)))
 #define __maybe_unused		__attribute__((unused))
@@ -225,6 +224,14 @@ struct ftrace_likely_data {
 #else
 #define notrace			__attribute__((no_instrument_function))
 #endif
+
+/*
+ * it doesn't make sense on ARM (currently the only user of __naked)
+ * to trace naked functions because then mcount is called without
+ * stack and frame pointer being set up and there is no chance to
+ * restore the lr register to the value before mcount was called.
+ */
+#define __naked			__attribute__((naked)) notrace
 
 #define __compiler_offsetof(a, b)	__builtin_offsetof(a, b)
 
