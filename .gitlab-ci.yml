@@ -1,0 +1,78 @@
+image: registry.gitlab.com/robherring/linux/ubuntu-kernel-build
+
+variables:
+  CONFIG: allmodconfig
+  TARGET: dtbs
+
+.jobs: &job_template
+  artifacts:
+    paths:
+      - "*.log"
+  script:
+    - make $CONFIG
+    - make -j $(nproc) $TARGET | tee build.log
+
+job-arc:
+  <<: *job_template
+  variables:
+    ARCH: arc
+
+job-arm:
+  <<: *job_template
+  variables:
+    ARCH: arm
+
+job-arm64:
+  <<: *job_template
+  variables:
+    ARCH: arm64
+
+job-c6x:
+  <<: *job_template
+  variables:
+    ARCH: c6x
+
+job-h8300:
+  <<: *job_template
+  variables:
+    ARCH: h8300
+
+job-microblaze:
+  <<: *job_template
+  variables:
+    ARCH: microblaze
+
+job-mips:
+  <<: *job_template
+  variables:
+    ARCH: mips
+
+job-nds32:
+  <<: *job_template
+  variables:
+    ARCH: nds32
+
+job-nios2:
+  <<: *job_template
+  variables:
+    ARCH: nios2
+
+job-openrisc:
+  <<: *job_template
+  variables:
+    ARCH: openrisc
+
+job-powerpc:
+  <<: *job_template
+  variables:
+    ARCH: powerpc
+
+job-sh:
+  <<: *job_template
+  variables:
+    ARCH: sh
+
+job-xtensa:
+  <<: *job_template
+  variables:
+    ARCH: xtensa
