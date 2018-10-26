@@ -1,4 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
+
+dtbs-y += \
+	or1ksim.dtb \
+	simple_smp.dtb
+
 ifneq '$(CONFIG_OPENRISC_BUILTIN_DTB)' '""'
 BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_OPENRISC_BUILTIN_DTB)).dtb.o
 else

@@ -1,3 +1,5 @@
+dtbs-y += ae3xx.dtb
+
 ifneq '$(CONFIG_NDS32_BUILTIN_DTB)' '""'
 BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_NDS32_BUILTIN_DTB)).dtb.o
 else
